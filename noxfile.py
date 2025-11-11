@@ -41,7 +41,7 @@ mypy_type_packages = [requirement for requirement in test_requirements if requir
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     requirements = session.poetry.export_requirements()
-    session.install("safety==3.2.10")
+    session.install("safety")
     # ignore https://github.com/pytest-dev/py/issues/287
     # its an irresposnbily filed CVE causing nose
     session.run("safety", "check", "--full-report", f"--file={requirements}", "--ignore=51457")
