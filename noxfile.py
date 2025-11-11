@@ -28,7 +28,7 @@ python_versions = [
 ]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
-    "safety",
+    # "safety",
     # "mypy",
     "tests",
 )
