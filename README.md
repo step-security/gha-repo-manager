@@ -1,5 +1,5 @@
 # Repo Manager via Github Actions
-x
+
 <!-- action-docs-description -->
 ## Description
 

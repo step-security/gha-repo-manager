@@ -1,6 +1,7 @@
 import json
 import sys
 import requests
+import os
 
 from actions_toolkit import core as actions_toolkit
 
