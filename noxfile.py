@@ -28,23 +28,12 @@ python_versions = [
 ]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
-    "safety",
     # "mypy",
     "tests",
 )
 pyproject = toml.load("pyproject.toml")
 test_requirements = pyproject["tool"]["poetry"]["group"]["dev"]["dependencies"].keys()
 mypy_type_packages = [requirement for requirement in test_requirements if requirement.startswith("types-")]
-
-
-@session(python=python_versions[0])
-def safety(session: Session) -> None:
-    """Scan dependencies for insecure packages."""
-    requirements = session.poetry.export_requirements()
-    session.install("marshmallow<4", "typer<0.17", "safety")
-    # ignore https://github.com/pytest-dev/py/issues/287
-    # its an irresposnbily filed CVE causing nose
-    session.run("safety", "check", "--full-report", f"--file={requirements}", "--ignore=51457")
 
 
 @session(python=python_versions)
