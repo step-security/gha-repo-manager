@@ -24,7 +24,7 @@ outputs:
     description: "Diff of this action, dumped to a json string"
 runs:
   using: "docker"
-  image: "docker://ghcr.io/step-security/gha-repo-manager:v1.8.0@sha256:f78095a179cbb3e2bb591f3c0df9a7520cc8d29be6586036d2a869220f7d9cf3" #v1.8.0
+  image: "docker://ghcr.io/step-security/gha-repo-manager:v1.8.1@sha256:16f004981f04e1a7667d9ff5d2a4a8c3d0634af0098d62e35b7d934a44c3441d" #v1.8.1
 branding:
   icon: "settings"
   color: "blue"
