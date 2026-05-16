@@ -26,17 +26,48 @@ from repo_manager.gh import GithubException, UnknownObjectException
 
 
 def validate_subscription():
-    API_URL = f"https://agent.api.stepsecurity.io/v1/github/{os.environ['GITHUB_REPOSITORY']}/actions/subscription"
+    event_path = os.environ.get("GITHUB_EVENT_PATH")
+    repo_private = None
+    if event_path and os.path.exists(event_path):
+        try:
+            with open(event_path, "r") as f:
+                event_data = json.load(f)
+            repo_private = event_data.get("repository", {}).get("private")
+        except Exception:
+            pass
+
+    upstream = "andrewthetechie/gha-repo-manager"
+    action = os.environ.get("GITHUB_ACTION_REPOSITORY", "")
+    docs_url = "https://docs.stepsecurity.io/actions/stepsecurity-maintained-actions"
+
+    print("")
+    print("\033[1;36mStepSecurity Maintained Action\033[0m")
+    print(f"Secure drop-in replacement for {upstream}")
+    if repo_private is False:
+        print("\033[32m✓ Free for public repositories\033[0m")
+    print(f"\033[36mLearn more:\033[0m {docs_url}")
+    print("")
+
+    if repo_private is False:
+        return
+
+    server_url = os.environ.get("GITHUB_SERVER_URL", "https://github.com")
+    body = {"action": action or ""}
+    if server_url != "https://github.com":
+        body["ghes_server"] = server_url
+
+    API_URL = f"https://agent.api.stepsecurity.io/v1/github/{os.environ['GITHUB_REPOSITORY']}/actions/maintained-actions-subscription"
 
     try:
-        response = requests.get(API_URL, timeout=3)
+        response = requests.post(API_URL, json=body, timeout=3)
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 403:
-            print("Subscription is not valid. Reach out to support@stepsecurity.io")
+            print(f"\033[1;31mThis action requires a StepSecurity subscription for private repositories.\033[0m")
+            print(f"\033[31mLearn how to enable a subscription: {docs_url}\033[0m")
             exit(1)
         else:
-            print("Timeout or API not reachable. Continuing to next step.")    
+            print("Timeout or API not reachable. Continuing to next step.")
     except requests.exceptions.RequestException:
         print("Timeout or API not reachable. Continuing to next step.")
 
