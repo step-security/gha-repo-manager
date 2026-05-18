@@ -63,8 +63,8 @@ def validate_subscription():
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
         if e.response.status_code == 403:
-            print(f"\033[1;31mThis action requires a StepSecurity subscription for private repositories.\033[0m")
-            print(f"\033[31mLearn how to enable a subscription: {docs_url}\033[0m")
+            actions_toolkit.error("\033[1;31mThis action requires a StepSecurity subscription for private repositories.\033[0m")
+            actions_toolkit.error(f"\033[31mLearn how to enable a subscription: {docs_url}\033[0m")
             exit(1)
         else:
             print("Timeout or API not reachable. Continuing to next step.")
